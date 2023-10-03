@@ -27,7 +27,7 @@ const Textinput = ({
   options,
   onFocus,
   defaultValue,
-
+  isRequired,
   ...rest
 }) => {
   const [open, setOpen] = useState(false);
@@ -55,7 +55,7 @@ const Textinput = ({
         {name && !isMask && (
           <input
             type={type === "password" && open === true ? "text" : type}
-            {...register(name)}
+            {...register(name, { required: isRequired })} // استخدام isRequired هنا
             {...rest}
             className={`${
               error ? " has-error" : " "
@@ -88,7 +88,7 @@ const Textinput = ({
             options={options}
             className={`${
               error ? " has-error" : " "
-            } form-control py-2 ${className}  `}
+            } form-control  py-2 ${className}  `}
             onFocus={onFocus}
             id={id}
             readOnly={readonly}
@@ -144,7 +144,7 @@ const Textinput = ({
           className={` mt-2 ${
             msgTooltip
               ? " inline-block bg-danger-500 text-white text-[10px] px-2 py-1 rounded"
-              : " text-danger-500 block text-sm"
+              : " text-danger-500 block text-sm flex"
           }`}
         >
           {error.message}
@@ -156,7 +156,7 @@ const Textinput = ({
           className={` mt-2 ${
             msgTooltip
               ? " inline-block bg-success-500 text-white text-[10px] px-2 py-1 rounded"
-              : " text-success-500 block text-sm"
+              : " text-success-500 block text-sm flex"
           }`}
         >
           {validate}

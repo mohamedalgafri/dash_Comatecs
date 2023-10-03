@@ -6,72 +6,55 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import baseUrl from "../../api/baseURL";
+import axios from "axios";
 
-const AddCategoryModal = ({ getAllData }) => {
+const EditCategoryModal = ({ show, setShow, idEdit, nameEdit, getAllData }) => {
   let [name, setName] = useState("");
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const schema = yup
-    .object({
-      name: yup.string().required("يرجى إدخال اسم التصنيف"),
-    })
-    .required();
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = (data) => {
+  const onSubmit = (e) => {
+    e.preventDefault();
     setIsLoading(true);
-
     baseUrl
-      .post("api/Category", {
-        name: data.name,
+      .put("api/Category", {
+        id: idEdit,
+        name,
       })
       .then((res) => {
         setActiveModal(false);
+        setShow(false);
         getAllData();
       })
       .catch((e) => {})
       .finally(() => setIsLoading(false));
-
-    console.log(data.name);
   };
 
   return (
     <>
-      <Button
-        text="أضف تصنيف"
-        className="py-2 px-4 bg-slate-950 text-white font-semibold rounded-lg hover:bg-gray-900 focus:ring-opacity-75"
-        onClick={() => setActiveModal(true)}
-      />
       <Modal
-        activeModal={activeModal}
-        onClose={() => setActiveModal(false)}
-        title="إضافة تصنيف"
+        activeModal={show}
+        title="تعديل تصنيف"
+        onClose={() => {
+          setActiveModal(false);
+          setShow(false);
+        }}
         footerContent={
           <Button
-            text="أضافة"
+            text="تعديل"
             isLoading={isLoading}
             className="btn-dark py-2 px-4 bg-slate-950"
-            onClick={handleSubmit(onSubmit)}
+            onClick={onSubmit}
           />
         }
       >
-        <form action="" onSubmit={handleSubmit(onSubmit)}>
+        <form action="">
           <div className="text-base text-slate-600 dark:text-slate-300">
             <Textinput
               label="اسم التصنيف"
               type="text"
               placeholder="ادخل اسم التصنيف"
-              name="name"
-              register={register}
-              error={errors.name}
+              defaultValue={nameEdit}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
@@ -81,4 +64,4 @@ const AddCategoryModal = ({ getAllData }) => {
   );
 };
 
-export default AddCategoryModal;
+export default EditCategoryModal;
