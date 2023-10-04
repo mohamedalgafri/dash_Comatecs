@@ -48,6 +48,7 @@ const SubCategories = ({ title = "التصنيفات" }) => {
   let [dataCategory, setDataCategory] = useState([]);
   let [idEdit, setIdEdit] = useState();
   let [nameEdit, setNameEdit] = useState();
+  let [categoryId, setCategoryId] = useState();
   let [show, setShow] = useState(false);
 
   const deleteData = async (id) => {
@@ -74,10 +75,11 @@ const SubCategories = ({ title = "التصنيفات" }) => {
     console.log(id);
   };
 
-  const editData = async (id, name) => {
+  const editData = async (id, name, categoryId) => {
     console.log(id, name);
     setIdEdit(id);
     setNameEdit(name);
+    setCategoryId(categoryId);
     setShow(true);
   };
 
@@ -98,7 +100,7 @@ const SubCategories = ({ title = "التصنيفات" }) => {
     },
     {
       Header: "اسم التصنيف",
-      accessor: "category",
+      accessor: "category.name",
       Cell: (row) => {
         return <span>{row?.cell?.value}</span>;
       },
@@ -110,6 +112,7 @@ const SubCategories = ({ title = "التصنيفات" }) => {
       Cell: (row) => {
         const id = row.cell.row.original.id;
         const name = row.cell.row.original.name;
+        const categoryId = row.cell.row.original.category.id;
         return (
           <div className="flex space-x-3 rtl:space-x-reverse">
             {/* <Tooltip
@@ -130,7 +133,7 @@ const SubCategories = ({ title = "التصنيفات" }) => {
             >
               <button
                 className="action-btn"
-                onClick={() => editData(id, name)}
+                onClick={() => editData(id, name, categoryId)}
                 type="button"
               >
                 <Icon icon="heroicons:pencil-square" />
@@ -251,6 +254,8 @@ const SubCategories = ({ title = "التصنيفات" }) => {
         show={show}
         setShow={setShow}
         getAllData={getAllData}
+        dataCategory={dataCategory}
+        categoryId={categoryId}
       />
       <Card className="p-2">
         <div className="md:flex justify-between items-center mb-6">

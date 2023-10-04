@@ -8,58 +8,11 @@ import * as yup from "yup";
 import baseUrl from "../../../api/baseURL";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Field, Form, Formik } from "formik";
 
 const EditCategoryModal = ({ show, setShow, idEdit, nameEdit, getAllData }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const schema = yup
-    .object({
-      name: yup.string().required("يرجى إدخال اسم التصنيف"),
-    })
-    .required();
-
-  const {
-    register,
-    formState: { errors },
-    reset,
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  useEffect(() => {
-    reset();
-  }, [nameEdit]);
-
-  const onSubmit = (data) => {
-    setIsLoading(true);
-
-    baseUrl
-      .put("api/Category", {
-        id: idEdit,
-        name: data.name,
-      })
-      .then((res) => {
-        setActiveModal(false);
-        setShow(false);
-        getAllData();
-        reset();
-        toast.success("تم تعديل اسم التصنيف", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          rtl: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          // theme: "dark",
-        });
-      })
-      .catch((e) => {})
-      .finally(() => setIsLoading(false));
-  };
 
   return (
     <>
@@ -69,30 +22,72 @@ const EditCategoryModal = ({ show, setShow, idEdit, nameEdit, getAllData }) => {
         onClose={() => {
           setActiveModal(false);
           setShow(false);
-          reset();
         }}
-        footerContent={
-          <Button
-            text="تعديل"
-            isLoading={isLoading}
-            className="btn-dark py-2 px-4 bg-slate-950"
-            onClick={handleSubmit(onSubmit)}
-          />
-        }
       >
-        <form action="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="text-base text-slate-600 dark:text-slate-300">
-            <Textinput
-              label="اسم التصنيف"
-              type="text"
-              placeholder="ادخل اسم التصنيف"
-              name="name"
-              register={register}
-              error={errors.name}
-              defaultValue={nameEdit}
-            />
-          </div>
-        </form>
+        <Formik
+          initialValues={{
+            name: nameEdit,
+          }}
+          validationSchema={yup.object().shape({
+            name: yup.string().required("اسم التصنيف  مطلوب"),
+          })}
+          onSubmit={async (values, { setSubmitting }) => {
+            setIsLoading(true);
+            try {
+              let data = JSON.parse(JSON.stringify(values));
+              await baseUrl.put(`api/Category`, {
+                id: idEdit,
+                name: data.name,
+              });
+              console.log(data);
+              setActiveModal(false);
+              setShow(false);
+              getAllData();
+              toast.success("تم إضافة تصنيف ", {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                rtl: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+        >
+          {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
+            <Form onSubmit={handleSubmit}>
+              <div className="text-base text-slate-600 dark:text-slate-300">
+                <Field
+                  label="اسم التصنيف الفرعي"
+                  name="name"
+                  value={values.name}
+                  type="text"
+                  placeholder="ادخل اسم التصنيف الفرعي"
+                  onChange={handleChange}
+                  className="form-control py-2"
+                />
+                {errors.name && (
+                  <p className="text-danger-500 block text-sm flex mt-2">
+                    {errors.name}
+                  </p>
+                )}
+                <Button
+                  type="submit"
+                  text="أضافة"
+                  isLoading={isLoading}
+                  className="btn-dark py-2 mt-4 mr-auto px-4 bg-slate-950"
+                  disabled={isSubmitting}
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
       </Modal>
     </>
   );
