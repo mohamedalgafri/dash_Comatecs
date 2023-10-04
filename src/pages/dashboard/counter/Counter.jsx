@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { addOne, changeName, munOne } from "../counter/counterSlice";
+import { addOne, changeName, munOne } from "./counterSlice";
 
 const Counter = () => {
   const [name, setName] = useState("");

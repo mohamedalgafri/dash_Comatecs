@@ -22,7 +22,7 @@ function Button({
         <button
           type={type}
           onClick={onClick}
-          className={`btn btn inline-flex justify-center   ${
+          className={`btn btn flex justify-center align-middle  ${
             isLoading ? " pointer-events-none" : ""
           }
         ${disabled ? " opacity-40 cursor-not-allowed" : ""}
@@ -56,7 +56,7 @@ function Button({
           {isLoading && (
             <>
               <svg
-                className={`animate-spin ltr:-ml-1 ltr:mr-3 rtl:-mr-1 rtl:ml-3 h-5 w-5 ${loadingClass}`}
+                className={`animate-spin ltr:-ml-1 ltr:mr-3  h-5 w-8 ${loadingClass}`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ function Button({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Loading ...
+              {/* Loading ... */}
             </>
           )}
         </button>
@@ -117,7 +117,7 @@ function Button({
           {isLoading && (
             <>
               <svg
-                className={`animate-spin ltr:-ml-1 ltr:mr-3 rtl:-mr-1 rtl:ml-3 h-5 w-5 ${loadingClass}`}
+                className={`animate-spin ltr:-ml-1 ltr:mr-3   h-5 w-5 ${loadingClass}`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -136,7 +136,7 @@ function Button({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Loading ...
+              {/* Loading ... */}
             </>
           )}
         </div>
@@ -178,7 +178,7 @@ function Button({
           {isLoading && (
             <>
               <svg
-                className={`animate-spin ltr:-ml-1 ltr:mr-3 rtl:-mr-1 rtl:ml-3 h-5 w-5 ${loadingClass}`}
+                className={`animate-spin ltr:-ml-1 ltr:mr-3  h-5 w-5 ${loadingClass}`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -197,7 +197,7 @@ function Button({
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Loading ...
+              {/* Loading ... */}
             </>
           )}
         </Link>

@@ -33,7 +33,7 @@ const Breadcrumbs = ({ title }) => {
         <div className="md:mb-6 mb-4 flex space-x-3 rtl:space-x-reverse">
           <ul className="breadcrumbs">
             <li className="text-primary-500">
-              <NavLink to="/dashboard" className="text-lg">
+              <NavLink to="/dashboard" className="text-lg text-slate-950">
                 <Icon icon="heroicons-outline:home" />
               </NavLink>
               <span className="breadcrumbs-icon rtl:transform rtl:rotate-180">

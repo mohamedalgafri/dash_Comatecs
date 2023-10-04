@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { advancedTable } from "../../constant/table-data";
+import { advancedTable } from "../../../constant/table-data";
 import Card from "@/components/ui/Card";
 import Icon from "@/components/ui/Icon";
 import Tooltip from "@/components/ui/Tooltip";
@@ -10,13 +10,13 @@ import {
   useGlobalFilter,
   usePagination,
 } from "react-table";
-import GlobalFilter from "../../components/globalFilter/GlobalFilter";
+import GlobalFilter from "../../../components/globalFilter/GlobalFilter";
 
-import AddCategoryModal from "./AddCategoryModal";
-import baseUrl from "../../api/baseURL";
-import Breadcrumbs from "../../components/ui/Breadcrumbs";
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import EditCategoryModal from "./EditCategoryModal";
+import AddSubCategoryModal from "./AddSubCategoryModal";
+import baseUrl from "../../../api/baseURL";
+import Breadcrumbs from "../../../components/ui/Breadcrumbs";
+import LoadingSpinner from "../../../components/ui/LoadingSpinner";
+import EditSubCategoryModal from "./EditSubCategoryModal";
 import { ToastContainer, toast } from "react-toastify";
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -41,18 +41,18 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 );
 
-const Categories = ({ title = "التصنيفات" }) => {
+const SubCategories = ({ title = "التصنيفات" }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   let [dataT, setDataT] = useState([]);
-  let [changeData, setChangeData] = useState();
+  let [dataCategory, setDataCategory] = useState([]);
   let [idEdit, setIdEdit] = useState();
   let [nameEdit, setNameEdit] = useState();
   let [show, setShow] = useState(false);
 
   const deleteData = async (id) => {
     await baseUrl
-      .delete(`api/Category/${id}`)
+      .delete(`api/SubCategory/${id}`)
       .then((res) => {
         console.log(res);
         toast.error("تم الحذف", {
@@ -60,10 +60,11 @@ const Categories = ({ title = "التصنيفات" }) => {
           autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
+          rtl: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "dark",
+          // theme: "dark",
         });
       })
       .catch((e) => {})
@@ -89,52 +90,20 @@ const Categories = ({ title = "التصنيفات" }) => {
       },
     },
     {
-      Header: "اسم التصنيف",
+      Header: "اسم التصنيف الفرعي",
       accessor: "name",
       Cell: (row) => {
         return <span>{row?.cell?.value}</span>;
       },
     },
-
     {
-      Header: "تاريخ الأضافة",
-      accessor: "date",
+      Header: "اسم التصنيف",
+      accessor: "category",
       Cell: (row) => {
         return <span>{row?.cell?.value}</span>;
       },
     },
 
-    {
-      Header: "الحالة",
-      accessor: "status",
-      Cell: (row) => {
-        return (
-          <span className="block w-full">
-            <span
-              className={` inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${
-                row?.cell?.value === "paid"
-                  ? "text-success-500 bg-success-500"
-                  : ""
-              } 
-              ${
-                row?.cell?.value === "due"
-                  ? "text-warning-500 bg-warning-500"
-                  : ""
-              }
-              ${
-                row?.cell?.value === "cancled"
-                  ? "text-danger-500 bg-danger-500"
-                  : ""
-              }
-              
-               `}
-            >
-              {row?.cell?.value}
-            </span>
-          </span>
-        );
-      },
-    },
     {
       Header: "action",
       accessor: "action",
@@ -189,9 +158,8 @@ const Categories = ({ title = "التصنيفات" }) => {
   ];
 
   const getAllData = async () => {
-    // setIsLoading(true);
     try {
-      let dataA = await baseUrl.get("api/Category", {
+      let dataA = await baseUrl.get("api/SubCategory", {
         headers: {
           Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         },
@@ -204,8 +172,20 @@ const Categories = ({ title = "التصنيفات" }) => {
     }
   };
 
+  const getDataCategory = () => {
+    baseUrl
+      .get("api/Category")
+      .then((res) => {
+        // console.log(res.data);
+        setDataCategory(res.data);
+      })
+      .catch((e) => {})
+      .finally(() => {});
+  };
+
   useEffect(() => {
     getAllData();
+    getDataCategory();
   }, []);
 
   const columns = useMemo(() => COLUMNS, []);
@@ -264,23 +244,24 @@ const Categories = ({ title = "التصنيفات" }) => {
   const { globalFilter, pageIndex, pageSize } = state;
   return (
     <>
-      <ToastContainer />
-      <EditCategoryModal
+      <Breadcrumbs title="التصنيفات الفرعية" />
+      <EditSubCategoryModal
         idEdit={idEdit}
         nameEdit={nameEdit}
         show={show}
         setShow={setShow}
         getAllData={getAllData}
       />
-
-      <Breadcrumbs title="التصنيفات" />
       <Card className="p-2">
         <div className="md:flex justify-between items-center mb-6">
           <div>
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
           </div>
           <div>
-            <AddCategoryModal getAllData={getAllData} />
+            <AddSubCategoryModal
+              dataCategory={dataCategory}
+              getAllData={getAllData}
+            />
             {/* <h4 className="card-title">{title}</h4> */}
           </div>
         </div>
@@ -321,7 +302,10 @@ const Categories = ({ title = "التصنيفات" }) => {
                 >
                   {isLoading ? (
                     <tr>
-                      <td colSpan={COLUMNS.length} className="text-center">
+                      <td
+                        colSpan={COLUMNS.length + 1}
+                        className="text-center py-5"
+                      >
                         <LoadingSpinner />
                       </td>
                     </tr>
@@ -366,19 +350,8 @@ const Categories = ({ title = "التصنيفات" }) => {
               </span>
             </span>
           </div>
-          <ul className="flex items-center rotate-180  space-x-3  rtl:space-x-reverse">
+          <ul className="flex items-center  space-x-3  rtl:space-x-reverse">
             <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                className={` ${
-                  !canPreviousPage ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-                onClick={() => gotoPage(0)}
-                disabled={!canPreviousPage}
-              >
-                <Icon icon="heroicons:chevron-double-left-solid" />
-              </button>
-            </li>
-            <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
               <button
                 className={` ${
                   !canPreviousPage ? "opacity-50 cursor-not-allowed" : ""
@@ -386,7 +359,7 @@ const Categories = ({ title = "التصنيفات" }) => {
                 onClick={() => previousPage()}
                 disabled={!canPreviousPage}
               >
-                التالي
+                <Icon icon="heroicons-outline:chevron-left" />
               </button>
             </li>
             {pageOptions.map((page, pageIdx) => (
@@ -405,7 +378,7 @@ const Categories = ({ title = "التصنيفات" }) => {
                 </button>
               </li>
             ))}
-            <li className="text-sm leading-4 text-slate-900 dark:text-white rtl:rotate-180">
+            <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
               <button
                 className={` ${
                   !canNextPage ? "opacity-50 cursor-not-allowed" : ""
@@ -413,18 +386,7 @@ const Categories = ({ title = "التصنيفات" }) => {
                 onClick={() => nextPage()}
                 disabled={!canNextPage}
               >
-                السابق
-              </button>
-            </li>
-            <li className="text-xl leading-4 text-slate-900 dark:text-white rtl:rotate-180">
-              <button
-                onClick={() => gotoPage(pageCount - 1)}
-                disabled={!canNextPage}
-                className={` ${
-                  !canNextPage ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                <Icon icon="heroicons:chevron-double-right-solid" />
+                <Icon icon="heroicons-outline:chevron-right" />
               </button>
             </li>
           </ul>
@@ -435,4 +397,4 @@ const Categories = ({ title = "التصنيفات" }) => {
   );
 };
 
-export default Categories;
+export default SubCategories;

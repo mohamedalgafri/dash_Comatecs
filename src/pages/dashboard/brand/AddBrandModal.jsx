@@ -5,22 +5,23 @@ import Textinput from "@/components/ui/Textinput";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import baseUrl from "../../api/baseURL";
+import baseUrl from "../../../api/baseURL";
+import { toast } from "react-toastify";
 
-const AddCategoryModal = ({ getAllData }) => {
-  let [name, setName] = useState("");
+const AddBrandModal = ({ getAllData }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const schema = yup
     .object({
-      name: yup.string().required("يرجى إدخال اسم التصنيف"),
+      name: yup.string().required("يرجى إدخال اسم الماركة"),
     })
     .required();
 
   const {
     register,
     formState: { errors },
+    reset,
     handleSubmit,
   } = useForm({
     resolver: yupResolver(schema),
@@ -30,30 +31,40 @@ const AddCategoryModal = ({ getAllData }) => {
     setIsLoading(true);
 
     baseUrl
-      .post("api/Category", {
+      .post("api/Brand", {
         name: data.name,
       })
       .then((res) => {
         setActiveModal(false);
         getAllData();
+        reset();
+        toast.success("تم إضافة الماركة", {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          rtl: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          // theme: "dark",
+        });
       })
       .catch((e) => {})
       .finally(() => setIsLoading(false));
-
-    console.log(data.name);
   };
 
   return (
     <>
       <Button
-        text="أضف تصنيف"
+        text="أضف الماركة"
         className="py-2 px-4 bg-slate-950 text-white font-semibold rounded-lg hover:bg-gray-900 focus:ring-opacity-75"
         onClick={() => setActiveModal(true)}
       />
       <Modal
         activeModal={activeModal}
         onClose={() => setActiveModal(false)}
-        title="إضافة تصنيف"
+        title="إضافة الماركة"
         footerContent={
           <Button
             text="أضافة"
@@ -66,13 +77,12 @@ const AddCategoryModal = ({ getAllData }) => {
         <form action="" onSubmit={handleSubmit(onSubmit)}>
           <div className="text-base text-slate-600 dark:text-slate-300">
             <Textinput
-              label="اسم التصنيف"
+              label="اسم الماركة"
               type="text"
-              placeholder="ادخل اسم التصنيف"
+              placeholder="ادخل اسم الماركة"
               name="name"
               register={register}
               error={errors.name}
-              onChange={(e) => setName(e.target.value)}
             />
           </div>
         </form>
@@ -81,4 +91,4 @@ const AddCategoryModal = ({ getAllData }) => {
   );
 };
 
-export default AddCategoryModal;
+export default AddBrandModal;

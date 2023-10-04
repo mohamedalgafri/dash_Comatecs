@@ -1,30 +1,61 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import Textinput from "@/components/ui/Textinput";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import baseUrl from "../../api/baseURL";
+import baseUrl from "../../../api/baseURL";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const EditCategoryModal = ({ show, setShow, idEdit, nameEdit, getAllData }) => {
-  let [name, setName] = useState("");
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  const schema = yup
+    .object({
+      name: yup.string().required("يرجى إدخال اسم التصنيف"),
+    })
+    .required();
+
+  const {
+    register,
+    formState: { errors },
+    reset,
+    handleSubmit,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  useEffect(() => {
+    reset();
+  }, [nameEdit]);
+
+  const onSubmit = (data) => {
     setIsLoading(true);
+
     baseUrl
       .put("api/Category", {
         id: idEdit,
-        name,
+        name: data.name,
       })
       .then((res) => {
         setActiveModal(false);
         setShow(false);
         getAllData();
+        reset();
+        toast.success("تم تعديل اسم التصنيف", {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          rtl: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          // theme: "dark",
+        });
       })
       .catch((e) => {})
       .finally(() => setIsLoading(false));
@@ -38,24 +69,27 @@ const EditCategoryModal = ({ show, setShow, idEdit, nameEdit, getAllData }) => {
         onClose={() => {
           setActiveModal(false);
           setShow(false);
+          reset();
         }}
         footerContent={
           <Button
             text="تعديل"
             isLoading={isLoading}
             className="btn-dark py-2 px-4 bg-slate-950"
-            onClick={onSubmit}
+            onClick={handleSubmit(onSubmit)}
           />
         }
       >
-        <form action="">
+        <form action="" onSubmit={handleSubmit(onSubmit)}>
           <div className="text-base text-slate-600 dark:text-slate-300">
             <Textinput
               label="اسم التصنيف"
               type="text"
               placeholder="ادخل اسم التصنيف"
+              name="name"
+              register={register}
+              error={errors.name}
               defaultValue={nameEdit}
-              onChange={(e) => setName(e.target.value)}
             />
           </div>
         </form>

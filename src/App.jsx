@@ -6,9 +6,11 @@ import { Routes, Route, Navigate } from "react-router-dom";
 const Dashboard = lazy(() => import("./pages/dashboard"));
 import Loading from "@/components/Loading";
 import Layout from "./layout/Layout";
-import Counter from "./pages/counter/Counter";
+import Counter from "./pages/dashboard/counter/Counter";
 import Posts from "./pages/posts/Posts";
-import Categories from "./pages/categories/Categories";
+import Categories from "./pages/dashboard/categories/Categories";
+import SubCategories from "./pages/dashboard/subCategory/SubCategories";
+import Brands from "./pages/dashboard/brand/Brands";
 
 const Login = lazy(() => import("./pages/auth/login"));
 
@@ -29,6 +31,8 @@ function App() {
           <Route path="counter" element={<Counter />} />
           <Route path="posts" element={<Posts />} />
           <Route path="categories" element={<Categories />} />
+          <Route path="sub-categories" element={<SubCategories />} />
+          <Route path="brand" element={<Brands />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Route>
       </Routes>

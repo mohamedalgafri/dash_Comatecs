@@ -5,6 +5,7 @@ export const menuItems = [
   },
 
   {
+    link: "dashboard",
     title: "لوحة التحكم",
     icon: "fa-solid fa-house",
     isOpen: true,
@@ -37,9 +38,14 @@ export const menuItems = [
     icon: "fa-solid fa-tag",
   },
   {
-    link: "counter",
+    link: "sub-categories",
     title: "التصنيفات الفرعية",
     icon: "fas fa-sitemap",
+  },
+  {
+    link: "brand",
+    title: "الماركات",
+    icon: "fa-solid fa-certificate",
   },
   {
     link: "counter",

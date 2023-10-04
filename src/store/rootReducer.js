@@ -1,4 +1,4 @@
-import counterReducers from "../pages/counter/counterSlice";
+import counterReducers from "../pages/dashboard/counter/counterSlice";
 import postsReducers from "../pages/posts/postsSlice";
 import auth from "../pages/auth/common/store";
 import layout from "./layout";
