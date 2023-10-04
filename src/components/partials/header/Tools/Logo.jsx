@@ -17,7 +17,7 @@ const Logo = () => {
         {width >= breakpoints.xl ? (
           <img src={isDark ? LogoWhite : MainLogo} alt="" />
         ) : (
-          <img src={isDark ? MobileLogoWhite : MobileLogo} alt="" />
+          <img src={isDark ? LogoWhite : MobileLogo} alt="" />
         )}
       </Link>
     </div>

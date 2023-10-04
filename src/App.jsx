@@ -11,6 +11,7 @@ import Posts from "./pages/posts/Posts";
 import Categories from "./pages/dashboard/categories/Categories";
 import SubCategories from "./pages/dashboard/subCategory/SubCategories";
 import Brands from "./pages/dashboard/brand/Brands";
+import AboutUs from "./pages/dashboard/aboutUs/AboutUs";
 
 const Login = lazy(() => import("./pages/auth/login"));
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="categories" element={<Categories />} />
           <Route path="sub-categories" element={<SubCategories />} />
           <Route path="brand" element={<Brands />} />
+          <Route path="aboutUs" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="/404" />} />
         </Route>
       </Routes>

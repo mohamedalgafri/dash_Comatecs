@@ -10,14 +10,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Field, Form, Formik } from "formik";
 
-const EditSubCategoryModal = ({
+const EditAboutUsModal = ({
   show,
   setShow,
   idEdit,
-  nameEdit,
+  titleEdit,
+  bodyEdit,
   getAllData,
-  dataCategory,
-  categoryId,
 }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +25,7 @@ const EditSubCategoryModal = ({
     <>
       <Modal
         activeModal={show}
-        title="تعديل التصنيف الفرعي"
+        title="تعديل تصنيف"
         onClose={() => {
           setActiveModal(false);
           setShow(false);
@@ -34,27 +33,27 @@ const EditSubCategoryModal = ({
       >
         <Formik
           initialValues={{
-            name: nameEdit,
-            category: categoryId,
+            title: titleEdit,
+            body: bodyEdit,
           }}
           validationSchema={yup.object().shape({
-            name: yup.string().required("اسم التصنيف الفرعي مطلوب"),
-            category: yup.string().required("اختيار التصنيف مطلوب"),
+            title: yup.string().required(" العنوان  مطلوب"),
+            body: yup.string().required(" الوصف  مطلوب"),
           })}
           onSubmit={async (values, { setSubmitting }) => {
             setIsLoading(true);
             try {
               let data = JSON.parse(JSON.stringify(values));
-              await baseUrl.put(`api/SubCategory`, {
+              await baseUrl.put(`api/AboutUs`, {
                 id: idEdit,
-                name: data.name,
-                categoryId: data.category,
+                title: data.title,
+                body: data.body,
               });
               console.log(data);
               setActiveModal(false);
               setShow(false);
               getAllData();
-              toast.success("تم إضافة تصنيف فرعي", {
+              toast.success("تم إضافة تصنيف ", {
                 position: "top-right",
                 autoClose: 1500,
                 hideProgressBar: false,
@@ -76,46 +75,42 @@ const EditSubCategoryModal = ({
               <div className="text-base text-slate-600 dark:text-slate-300">
                 <div>
                   <label htmlFor="category" className="form-label">
-                    اسم التصنيف الفرعي
+                    العنوان
                   </label>
                   <Field
-                    label="اسم التصنيف الفرعي"
-                    name="name"
-                    value={values.name}
+                    label="العنوان"
+                    name="title"
+                    value={values.title}
                     type="text"
-                    placeholder="ادخل اسم التصنيف الفرعي"
+                    placeholder="ادخل  العنوان "
                     onChange={handleChange}
                     className="form-control py-2"
                   />
-                  {errors.name && (
+                  {errors.title && (
                     <p className="text-danger-500 block text-sm flex mt-2">
-                      {errors.name}
+                      {errors.title}
                     </p>
                   )}
                 </div>
-
                 <div className="mt-3">
                   <label htmlFor="category" className="form-label">
-                    اختر التصنيف
+                    الوصف
                   </label>
 
                   <Field
-                    name="category"
-                    as="select"
-                    value={values.category}
-                    className="form-control py-2"
+                    label="الوصف"
+                    name="body"
+                    as="textarea"
+                    rows="6"
+                    value={values.body}
+                    type="text"
+                    placeholder="ادخل  الوصف "
                     onChange={handleChange}
-                  >
-                    <option value="">اختر التصنيف</option>
-                    {dataCategory.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </Field>
-                  {errors.category && (
+                    className="form-control py-2"
+                  />
+                  {errors.body && (
                     <p className="text-danger-500 block text-sm flex mt-2">
-                      {errors.category}
+                      {errors.body}
                     </p>
                   )}
                 </div>
@@ -135,4 +130,4 @@ const EditSubCategoryModal = ({
   );
 };
 
-export default EditSubCategoryModal;
+export default EditAboutUsModal;

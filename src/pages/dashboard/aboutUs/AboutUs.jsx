@@ -12,11 +12,11 @@ import {
 } from "react-table";
 import GlobalFilter from "../../../components/globalFilter/GlobalFilter";
 
-import AddSubCategoryModal from "./AddSubCategoryModal";
+import AddAboutUsModal from "./AddAboutUsModal";
 import baseUrl from "../../../api/baseURL";
 import Breadcrumbs from "../../../components/ui/Breadcrumbs";
 import LoadingSpinner from "../../../components/ui/LoadingSpinner";
-import EditSubCategoryModal from "./EditSubCategoryModal";
+import EditAboutUsModal from "./EditAboutUsModal";
 import { ToastContainer, toast } from "react-toastify";
 
 const IndeterminateCheckbox = React.forwardRef(
@@ -41,31 +41,31 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 );
 
-const SubCategories = ({ title = "التصنيفات" }) => {
+const AboutUs = ({ title = "من نحن" }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   let [dataT, setDataT] = useState([]);
-  let [dataCategory, setDataCategory] = useState([]);
+  let [changeData, setChangeData] = useState();
   let [idEdit, setIdEdit] = useState();
-  let [nameEdit, setNameEdit] = useState();
-  let [categoryId, setCategoryId] = useState();
+  let [titleEdit, setTitleEdit] = useState();
+  let [bodyEdit, setBodyEdit] = useState();
   let [show, setShow] = useState(false);
 
   const deleteData = async (id) => {
     await baseUrl
-      .delete(`api/SubCategory/${id}`)
+      .delete(`api/AboutUs/${id}`)
       .then((res) => {
         console.log(res);
         toast.error("تم الحذف", {
           position: "top-right",
-          autoClose: 1500,
+          autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
-          rtl: true,
           pauseOnHover: true,
           draggable: true,
+          rtl: true,
           progress: undefined,
-          // theme: "dark",
+          theme: "light",
         });
       })
       .catch((e) => {})
@@ -75,32 +75,25 @@ const SubCategories = ({ title = "التصنيفات" }) => {
     console.log(id);
   };
 
-  const editData = async (id, name, categoryId) => {
-    console.log(id, name);
+  const editData = async (id, title, body) => {
+    console.log(id, title, body);
     setIdEdit(id);
-    setNameEdit(name);
-    setCategoryId(categoryId);
+    setTitleEdit(title);
+    setBodyEdit(body);
     setShow(true);
   };
 
   const COLUMNS = [
     {
-      Header: "Id",
-      accessor: "id",
+      Header: "العنوان",
+      accessor: "title",
       Cell: (row) => {
         return <span>{row?.cell?.value}</span>;
       },
     },
     {
-      Header: "اسم التصنيف الفرعي",
-      accessor: "name",
-      Cell: (row) => {
-        return <span>{row?.cell?.value}</span>;
-      },
-    },
-    {
-      Header: "اسم التصنيف",
-      accessor: "category.name",
+      Header: "الوصف",
+      accessor: "body",
       Cell: (row) => {
         return <span>{row?.cell?.value}</span>;
       },
@@ -111,8 +104,8 @@ const SubCategories = ({ title = "التصنيفات" }) => {
       accessor: "action",
       Cell: (row) => {
         const id = row.cell.row.original.id;
-        const name = row.cell.row.original.name;
-        const categoryId = row.cell.row.original.category.id;
+        const title = row.cell.row.original.title;
+        const body = row.cell.row.original.body;
         return (
           <div className="flex space-x-3 rtl:space-x-reverse">
             {/* <Tooltip
@@ -133,7 +126,7 @@ const SubCategories = ({ title = "التصنيفات" }) => {
             >
               <button
                 className="action-btn"
-                onClick={() => editData(id, name, categoryId)}
+                onClick={() => editData(id, title, body)}
                 type="button"
               >
                 <Icon icon="heroicons:pencil-square" />
@@ -161,8 +154,9 @@ const SubCategories = ({ title = "التصنيفات" }) => {
   ];
 
   const getAllData = async () => {
+    // setIsLoading(true);
     try {
-      let dataA = await baseUrl.get("api/SubCategory", {
+      let dataA = await baseUrl.get("api/AboutUs", {
         headers: {
           Authorization: `Bearer ${window.localStorage.getItem("token")}`,
         },
@@ -175,20 +169,8 @@ const SubCategories = ({ title = "التصنيفات" }) => {
     }
   };
 
-  const getDataCategory = () => {
-    baseUrl
-      .get("api/Category")
-      .then((res) => {
-        // console.log(res.data);
-        setDataCategory(res.data);
-      })
-      .catch((e) => {})
-      .finally(() => {});
-  };
-
   useEffect(() => {
     getAllData();
-    getDataCategory();
   }, []);
 
   const columns = useMemo(() => COLUMNS, []);
@@ -247,15 +229,14 @@ const SubCategories = ({ title = "التصنيفات" }) => {
   const { globalFilter, pageIndex, pageSize } = state;
   return (
     <>
-      <Breadcrumbs title="التصنيفات الفرعية" />
-      <EditSubCategoryModal
+      <Breadcrumbs title="من نحن" />
+      <EditAboutUsModal
         idEdit={idEdit}
-        nameEdit={nameEdit}
+        titleEdit={titleEdit}
+        bodyEdit={bodyEdit}
         show={show}
         setShow={setShow}
         getAllData={getAllData}
-        dataCategory={dataCategory}
-        categoryId={categoryId}
       />
       <Card className="p-2">
         <div className="md:flex justify-between items-center mb-6">
@@ -263,10 +244,7 @@ const SubCategories = ({ title = "التصنيفات" }) => {
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
           </div>
           <div>
-            <AddSubCategoryModal
-              dataCategory={dataCategory}
-              getAllData={getAllData}
-            />
+            <AddAboutUsModal getAllData={getAllData} />
             {/* <h4 className="card-title">{title}</h4> */}
           </div>
         </div>
@@ -402,4 +380,4 @@ const SubCategories = ({ title = "التصنيفات" }) => {
   );
 };
 
-export default SubCategories;
+export default AboutUs;

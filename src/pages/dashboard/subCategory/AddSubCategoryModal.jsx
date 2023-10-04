@@ -62,20 +62,25 @@ const SubAddCategoryModal = ({ getAllData, dataCategory }) => {
           {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <div className="text-base text-slate-600 dark:text-slate-300">
-                <Field
-                  label="اسم التصنيف الفرعي"
-                  name="name"
-                  value={values.name}
-                  type="text"
-                  placeholder="ادخل اسم التصنيف الفرعي"
-                  onChange={handleChange}
-                  className="form-control py-2"
-                />
-                {errors.name && (
-                  <p className="text-danger-500 block text-sm flex mt-2">
-                    {errors.name}
-                  </p>
-                )}
+                <div>
+                  <label htmlFor="category" className="form-label">
+                    اسم التصنيف
+                  </label>
+                  <Field
+                    label="اسم التصنيف الفرعي"
+                    name="name"
+                    value={values.name}
+                    type="text"
+                    placeholder="ادخل اسم التصنيف الفرعي"
+                    onChange={handleChange}
+                    className="form-control py-2"
+                  />
+                  {errors.name && (
+                    <p className="text-danger-500 block text-sm flex mt-2">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
                 <div className="mt-3">
                   <label htmlFor="category" className="form-label">
                     اختر التصنيف

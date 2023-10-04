@@ -7,52 +7,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import baseUrl from "../../../api/baseURL";
 import { toast } from "react-toastify";
+import { Field, Form, Formik } from "formik";
 
 const AddBrandModal = ({ getAllData }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const schema = yup
-    .object({
-      name: yup.string().required("يرجى إدخال اسم الماركة"),
-    })
-    .required();
-
-  const {
-    register,
-    formState: { errors },
-    reset,
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
-  const onSubmit = (data) => {
-    setIsLoading(true);
-
-    baseUrl
-      .post("api/Brand", {
-        name: data.name,
-      })
-      .then((res) => {
-        setActiveModal(false);
-        getAllData();
-        reset();
-        toast.success("تم إضافة الماركة", {
-          position: "top-right",
-          autoClose: 1500,
-          hideProgressBar: false,
-          closeOnClick: true,
-          rtl: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          // theme: "dark",
-        });
-      })
-      .catch((e) => {})
-      .finally(() => setIsLoading(false));
-  };
 
   return (
     <>
@@ -65,27 +24,74 @@ const AddBrandModal = ({ getAllData }) => {
         activeModal={activeModal}
         onClose={() => setActiveModal(false)}
         title="إضافة الماركة"
-        footerContent={
-          <Button
-            text="أضافة"
-            isLoading={isLoading}
-            className="btn-dark py-2 px-4 bg-slate-950"
-            onClick={handleSubmit(onSubmit)}
-          />
-        }
       >
-        <form action="" onSubmit={handleSubmit(onSubmit)}>
-          <div className="text-base text-slate-600 dark:text-slate-300">
-            <Textinput
-              label="اسم الماركة"
-              type="text"
-              placeholder="ادخل اسم الماركة"
-              name="name"
-              register={register}
-              error={errors.name}
-            />
-          </div>
-        </form>
+        <Formik
+          initialValues={{
+            name: "",
+          }}
+          validationSchema={yup.object().shape({
+            name: yup.string().required("اسم الماركة  مطلوب"),
+          })}
+          onSubmit={async (values, { setSubmitting }) => {
+            setIsLoading(true);
+            try {
+              let data = JSON.parse(JSON.stringify(values));
+              await baseUrl.post(`api/Brand`, {
+                name: data.name,
+              });
+              console.log(data);
+              setActiveModal(false);
+              getAllData();
+              toast.success("تم إضافة ماركة ", {
+                position: "top-right",
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                rtl: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setIsLoading(false);
+            }
+          }}
+        >
+          {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
+            <Form onSubmit={handleSubmit}>
+              <div className="text-base text-slate-600 dark:text-slate-300">
+                <div>
+                  <label htmlFor="category" className="form-label">
+                    اسم الماركة
+                  </label>
+                  <Field
+                    label="اسم الماركة"
+                    name="name"
+                    value={values.name}
+                    type="text"
+                    placeholder="ادخل اسم الماركة"
+                    onChange={handleChange}
+                    className="form-control py-2"
+                  />
+                  {errors.name && (
+                    <p className="text-danger-500 block text-sm flex mt-2">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  type="submit"
+                  text="أضافة"
+                  isLoading={isLoading}
+                  className="btn-dark py-2 mt-4 mr-auto px-4 bg-slate-950"
+                  disabled={isSubmitting}
+                />
+              </div>
+            </Form>
+          )}
+        </Formik>
       </Modal>
     </>
   );

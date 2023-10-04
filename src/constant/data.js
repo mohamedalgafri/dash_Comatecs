@@ -52,6 +52,11 @@ export const menuItems = [
     title: "المنتجات",
     icon: "fas fa-box",
   },
+  {
+    link: "aboutUs",
+    title: "من نحن",
+    icon: "fas fa-box",
+  },
 ];
 
 export const topMenu = [

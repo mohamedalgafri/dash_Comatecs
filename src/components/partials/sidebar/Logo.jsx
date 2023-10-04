@@ -35,7 +35,7 @@ const SidebarLogo = ({ menuHover }) => {
             {!isDark && !isSemiDark ? (
               <img src={MobileLogo} alt="" />
             ) : (
-              <img src={MobileLogoWhite} alt="" />
+              <img src={MobileLogo} alt="" />
             )}
           </div>
 

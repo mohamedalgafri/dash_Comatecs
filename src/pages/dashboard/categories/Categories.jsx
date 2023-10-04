@@ -98,37 +98,6 @@ const Categories = ({ title = "التصنيفات" }) => {
     },
 
     {
-      Header: "الحالة",
-      accessor: "status",
-      Cell: (row) => {
-        return (
-          <span className="block w-full">
-            <span
-              className={` inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${
-                row?.cell?.value === "paid"
-                  ? "text-success-500 bg-success-500"
-                  : ""
-              } 
-              ${
-                row?.cell?.value === "due"
-                  ? "text-warning-500 bg-warning-500"
-                  : ""
-              }
-              ${
-                row?.cell?.value === "cancled"
-                  ? "text-danger-500 bg-danger-500"
-                  : ""
-              }
-              
-               `}
-            >
-              {row?.cell?.value}
-            </span>
-          </span>
-        );
-      },
-    },
-    {
       Header: "action",
       accessor: "action",
       Cell: (row) => {
@@ -147,7 +116,7 @@ const Categories = ({ title = "التصنيفات" }) => {
               </button>
             </Tooltip> */}
             <Tooltip
-              content="Edit"
+              content="تعديل"
               placement="top"
               arrow
               animation="shift-away"
@@ -161,7 +130,7 @@ const Categories = ({ title = "التصنيفات" }) => {
               </button>
             </Tooltip>
             <Tooltip
-              content="Delete"
+              content="حذف"
               placement="top"
               arrow
               animation="shift-away"

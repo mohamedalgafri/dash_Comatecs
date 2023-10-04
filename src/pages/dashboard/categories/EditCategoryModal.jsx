@@ -63,23 +63,28 @@ const EditCategoryModal = ({ show, setShow, idEdit, nameEdit, getAllData }) => {
           {({ values, errors, handleChange, handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <div className="text-base text-slate-600 dark:text-slate-300">
-                <Field
-                  label="اسم التصنيف الفرعي"
-                  name="name"
-                  value={values.name}
-                  type="text"
-                  placeholder="ادخل اسم التصنيف الفرعي"
-                  onChange={handleChange}
-                  className="form-control py-2"
-                />
-                {errors.name && (
-                  <p className="text-danger-500 block text-sm flex mt-2">
-                    {errors.name}
-                  </p>
-                )}
+                <div>
+                  <label htmlFor="category" className="form-label">
+                    اسم التصنيف
+                  </label>
+                  <Field
+                    label="اسم التصنيف "
+                    name="name"
+                    value={values.name}
+                    type="text"
+                    placeholder="ادخل اسم التصنيف "
+                    onChange={handleChange}
+                    className="form-control py-2"
+                  />
+                  {errors.name && (
+                    <p className="text-danger-500 block text-sm flex mt-2">
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
                 <Button
                   type="submit"
-                  text="أضافة"
+                  text="تعديل"
                   isLoading={isLoading}
                   className="btn-dark py-2 mt-4 mr-auto px-4 bg-slate-950"
                   disabled={isSubmitting}
