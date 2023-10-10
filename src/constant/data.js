@@ -48,7 +48,7 @@ export const menuItems = [
     icon: "fa-solid fa-certificate",
   },
   {
-    link: "counter",
+    link: "products",
     title: "المنتجات",
     icon: "fas fa-box",
   },
